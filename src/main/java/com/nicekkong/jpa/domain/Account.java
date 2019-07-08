@@ -14,19 +14,26 @@
 package com.nicekkong.jpa.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
+@Table
 public class Account {
 
     @Id @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
     private String password;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date credate = new Date();  // default 값으로 설정된다.
+
+    @Transient // 컬럼 맵핑을 하지는 않는다.
+    private String notDbColumn;
 
     public Long getId() {
         return id;

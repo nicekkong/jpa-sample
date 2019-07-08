@@ -15,6 +15,7 @@ package com.nicekkong.jpa;
 
 
 import com.nicekkong.jpa.domain.Account;
+import org.hibernate.Session;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -37,5 +38,9 @@ public class JpaRunner implements ApplicationRunner {
         account.setPassword("닉과르");
 
         em.persist(account);
+
+        // Hibernate Session 객체 사용
+        Session session = em.unwrap(Session.class);
+        session.save(account);
     }
 }

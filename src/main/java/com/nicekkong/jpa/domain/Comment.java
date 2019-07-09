@@ -5,19 +5,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter @Setter
-@Entity
-public class Study {
 
-    @Id @GeneratedValue
+@Entity
+@Getter @Setter
+public class Comment {
+
+    @Id
+    @GeneratedValue
     private Long id;
 
-    private String name;
+    private String comment;
 
     @ManyToOne
-    private Account owner;
-
-
-
+    private Post post;
 
 }

@@ -11,6 +11,7 @@
  * Description  : 
  ******************************************************/
 
+
 package com.nicekkong.jpa.domain;
 
 
@@ -34,6 +35,12 @@ public class Account {
 
     @Transient // 컬럼 맵핑을 하지는 않는다.
     private String notDbColumn;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "street", column = @Column(name="home_street"))
+    })
+    private Address address;
 
     public Long getId() {
         return id;

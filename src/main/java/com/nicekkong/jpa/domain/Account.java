@@ -1,25 +1,15 @@
-/*
- * Copyright (c) 2019.
- * nicekkong JE Foundation
- */
-
-/******************************************************
- * Project Name : jpa04
- * File Name    : .java
- * Author       : nicekkong@gmail.com
- * Create Date  : 2019-07-08 23:54
- * Description  : 
- ******************************************************/
-
-
 package com.nicekkong.jpa.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
+@Getter@Setter
 public class Account {
 
     @Id @GeneratedValue
@@ -30,39 +20,17 @@ public class Account {
 
     private String password;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date credate = new Date();  // default 값으로 설정된다.
+    @OneToMany(mappedBy = "owner")
+    private Set<Study> studies = new HashSet<>();
 
-    @Transient // 컬럼 맵핑을 하지는 않는다.
-    private String notDbColumn;
+    public void addStudy(Study study) {
+        this.getStudies().add(study);
+        study.setOwner(this);
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "street", column = @Column(name="home_street"))
-    })
-    private Address address;
-
-    public Long getId() {
-        return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void removeStudy(Study study) {
+        this.getStudies().remove(study);
+        study.setOwner(null);
     }
 }

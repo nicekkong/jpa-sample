@@ -15,6 +15,7 @@ package com.nicekkong.jpa;
 
 
 import com.nicekkong.jpa.domain.Account;
+import com.nicekkong.jpa.domain.Study;
 import org.hibernate.Session;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -37,10 +38,18 @@ public class JpaRunner implements ApplicationRunner {
         account.setUsername("nicekkong2");
         account.setPassword("닉과르");
 
-        em.persist(account);
+        Study study = new Study();
+        study.setName("Spring Data JPA");
+
+//        study.setOwner(account);
+//        account.getStudies().add(study);
+
+        // 위의 두줄을 convenient 메서드를 통해 일괄로 작업
+        account.addStudy(study);
 
         // Hibernate Session 객체 사용
         Session session = em.unwrap(Session.class);
         session.save(account);
+        session.save(study);
     }
 }

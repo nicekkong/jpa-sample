@@ -15,6 +15,7 @@ package com.nicekkong.jpa;
 
 
 import com.nicekkong.jpa.domain.Comment;
+import com.nicekkong.jpa.domain.Post;
 import org.hibernate.Session;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -22,7 +23,12 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 @Transactional  // entityManager는 반드시 한 TR에서 이뤄져야 된다.
@@ -34,40 +40,48 @@ public class JpaRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-//        Post post = new Post();
-//        post.setTitle("Spring Data JPA...");
-//
-//        Comment comment = new Comment();
-//        comment.setComment("빨리 보고 싶어요~!!");
-//
-//        post.addComment(comment);
-//
-//        Comment comment1 = new Comment();
-//        comment1.setComment("시작하자아아아~~");
-//
-//        post.addComment(comment1);
 
         Session session = em.unwrap(Session.class);
 
+        Post p1 = new Post();
+        p1.setTitle("JPA Study");
+//        session.save(p1);
 
-//        session.save(comment);        // Post에서 cascadeType.Persistent 로 설정하면 엔티티 상태 변화를 함께 전달한다.
-//        session.save(comment1);
+        Comment c1 = new Comment();
+        c1.setComment("열시미 해보아요~!!");
 
-//        Post post1 = session.get(Post.class, 1L);
-//        session.delete(post1);        // cascadeType.REMOVED에 의해 함께 삭제 된다.
+        Comment c2 = new Comment();
+        c2.setComment("우리 모두 같이 해보아요");
 
+        p1.addComment(c1);
+        p1.addComment(c2);
 
-//        Post post = session.get(Post.class, 1L);
-//
-//        System.out.println(post.getTitle());
-//        post.getComments().forEach(c -> {
-//            System.out.println("=================");
-//            System.out.println(c.getComment());
-//        });
+        session.save(p1);
 
-        Comment comment = session.get(Comment.class, 2L);
-        System.out.println(comment.getComment());
-        System.out.println(comment.getPost().getTitle());
+        // 1. JPQL
+        TypedQuery<Post> q = em.createQuery("SELECT p FROM Post AS p", Post.class);
+        List<Post> posts1 = q.getResultList();
+
+        System.out.println("==1. JPQL ===========================");
+        posts1.forEach(System.out::println);
+
+        // 2. HQL
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Post> query = builder.createQuery(Post.class);
+
+        Root<Post> root = query.from(Post.class);
+        query.select(root);
+
+        List<Post> posts2 = em.createQuery(query).getResultList();
+
+        System.out.println("==2. HQL ===========================");
+        posts2.forEach(System.out::println);
+
+        // 3. Native Query
+        List<Post> posts3 = em.createNativeQuery("select * from post", Post.class).getResultList();
+
+        System.out.println("==3. Native Query ===========================");
+        posts3.forEach(System.out::println);
 
 
     }

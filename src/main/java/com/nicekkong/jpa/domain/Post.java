@@ -17,9 +17,10 @@ public class Post {
 
     private String title;
 
-    @OneToMany(mappedBy ="post",
+    @OneToMany(mappedBy ="post"
 //                cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
-                cascade = CascadeType.ALL   // 보통 Cascade 상태 ALL를 전파하는 것으로 설정한다.
+              ,cascade = CascadeType.ALL   // 보통 Cascade 상태 ALL를 전파하는 것으로 설정한다.
+//            ,fetch = FetchType.EA GER // OneToMany 관계에서 기본 Fetch 전략은 Lazy
             )
     private Set<Comment> comments = new HashSet<>();
 

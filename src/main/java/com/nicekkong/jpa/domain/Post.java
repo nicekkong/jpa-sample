@@ -1,8 +1,6 @@
 package com.nicekkong.jpa.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,13 +9,22 @@ import java.util.Set;
 @Entity
 @Getter@Setter
 @ToString
+@Builder @NoArgsConstructor @AllArgsConstructor
+@SequenceGenerator(name="postSeq", sequenceName = "SEQ_POST", allocationSize = 1)
 public class Post {
 
     @Id
-    @GeneratedValue
+//    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postSeq")
     private Long id;
 
     private String title;
+
+    private String contentTag;
+
+    private String content;
+
+
 
     @OneToMany(mappedBy ="post"
 //                cascade = {CascadeType.PERSIST, CascadeType.REMOVE}

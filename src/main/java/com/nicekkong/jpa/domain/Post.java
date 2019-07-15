@@ -1,6 +1,7 @@
 package com.nicekkong.jpa.domain;
 
 import lombok.*;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
 @ToString
 @Builder @NoArgsConstructor @AllArgsConstructor
 @SequenceGenerator(name="postSeq", sequenceName = "SEQ_POST", allocationSize = 1)
-public class Post {
+public class Post extends AbstractAggregateRoot<Post > {
 
     @Id
 //    @GeneratedValue
@@ -24,6 +25,11 @@ public class Post {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+
+    public Post publish() {
+        this.registerEvent(new PostPublishedEvent(this));
+        return this;
+    }
 
 
 }
